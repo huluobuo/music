@@ -342,7 +342,25 @@ class MusicApp(tk.Tk):
                 pass
         
         import sys
-        #sys.stdout = TextRedirector(self.terminal_output)
+        # 在初始化方法中添加日志配置
+        self.log_dir = os.path.join(os.getcwd(), 'logs')
+        os.makedirs(self.log_dir, exist_ok=True)
+        
+        # 创建带时间戳的日志文件
+        log_file = time.strftime("%Y%m%d-%H%M%S.log")
+        self.log_path = os.path.join(self.log_dir, log_file)
+        
+        # 配置logging模块
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler(self.log_path, encoding='utf-8'),
+                logging.StreamHandler()
+            ]
+        )
+        
+        # 替换原有的输出重定向
         sys.stdout = sys.__stdout__
 
     def load_music_list(self):
